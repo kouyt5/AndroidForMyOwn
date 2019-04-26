@@ -2,6 +2,7 @@ package com.example.permission;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,9 +21,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.permission.listener.VideoListener;
 import com.example.permission.mydialog.MyDialog;
+import com.example.permission.mylistener.MyVideoAllCallBack;
 import com.goyourfly.multi_picture.ImageLoader;
 import com.goyourfly.multi_picture.MultiPictureView;
 import com.orhanobut.logger.Logger;
+import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
@@ -45,7 +48,8 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         //防止弹出dialog后状态栏异常
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        loadGSVUVideo9Player();
+        loadGSYVideoPlayer();
+        //loadGSVUVideo9Player();
         loadMultiPictureView();
     }
 
@@ -84,7 +88,7 @@ public class Main2Activity extends AppCompatActivity {
 //                , "饺子闭眼睛", Jzvd.SCREEN_WINDOW_NORMAL);
     }
 
-    public void loadMultiPictureView(){
+    public void loadMultiPictureView() {
         MultiPictureView.setImageLoader(new ImageLoader() {
             @Override
             public void loadImage(@NotNull ImageView imageView, @NotNull Uri uri) {
@@ -102,25 +106,25 @@ public class Main2Activity extends AppCompatActivity {
         multiPictureView.setItemClickCallback(new MultiPictureView.ItemClickCallback() {
             @Override
             public void onItemClicked(@NotNull View view, int i, @NotNull ArrayList<Uri> arrayList) {
-               showMyDialog(arrayList,i);
+                showMyDialog(arrayList, i);
             }
         });
     }
 
-    public void showMyDialog(ArrayList<Uri> list,int position){
-        MyDialog dialog = new MyDialog(Main2Activity.this, R.style.Plane_Dialog,list,position);
+    public void showMyDialog(ArrayList<Uri> list, int position) {
+        MyDialog dialog = new MyDialog(Main2Activity.this, R.style.Plane_Dialog, list, position);
         dialog.show();
     }
 
     public void loadGSVUVideo9Player() {
 
-        View view= LayoutInflater.from(this).inflate(R.layout.item_video,findViewById(R.id.activity_main2),true);
+        View view = LayoutInflater.from(this).inflate(R.layout.item_video, findViewById(R.id.activity_main2), true);
 
-        String video2=" http://192.168.0.25:9000/bucket1/1234.avi?Expires=1555552384&AccessKeyId=XLfUoMQHqgABQZCa&" +
+        String video2 = " http://192.168.0.25:9000/bucket1/1234.avi?Expires=1555552384&AccessKeyId=XLfUoMQHqgABQZCa&" +
                 "Signature=5fd96d339b3937b6ed6f097b2c4a060821abcee9&security-token=40852cb9744f4625873af950d0057af3";
         String video1 = "https://github.com/kouyt5/cc/blob/master/200%20(195).avi?raw=true";
         String video3 = "https://github.com/kouyt5/cc/blob/master/keaton.mp4?raw=true";
-        videoPlayer =view.findViewById(R.id.gsyv_video_player);
+        videoPlayer = view.findViewById(R.id.gsyv_video_player);
         videoPlayer.setUp(video3, true, "测试视频");
 
         //增加封面
@@ -129,7 +133,7 @@ public class Main2Activity extends AppCompatActivity {
         Glide.with(this)
                 .setDefaultRequestOptions(
                         new RequestOptions()
-                                .frame(1)
+                                .frame(3000)
                                 .centerCrop()
                 )
                 .load(video3)
@@ -141,27 +145,27 @@ public class Main2Activity extends AppCompatActivity {
         videoPlayer.getBackButton().setVisibility(View.INVISIBLE);
         //设置旋转
         orientationUtils = new OrientationUtils(this, videoPlayer);
+        orientationUtils.setEnable(false);
         //设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Logger.d("you click full screen");
-                if (orientationUtils.getIsLand()!=1) {
+                if (orientationUtils.getIsLand() != 1) {
                     videoPlayer.getBackButton().setVisibility(View.VISIBLE);
                     orientationUtils.resolveByClick();
                     Logger.d("全屏");
                 }
-
-                if(videoPlayer.getBackButton().isShown()){
-                    Logger.d("back is exist");
-                };
                 videoPlayer.startWindowFullscreen(Main2Activity.this, true, true);
+                if (videoPlayer.getBackButton().isShown()) {
+                    Logger.d("back is exist");
+                }
             }
         });
         //是否可以滑动调整
         videoPlayer.setIsTouchWiget(true);
         //设置返回按键功能
-        videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener(){
+        videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Logger.d("click back");
@@ -181,7 +185,85 @@ public class Main2Activity extends AppCompatActivity {
                 }
                 //videoPlayer.getBackButton().setVisibility(View.INVISIBLE);
             }
+
+
         });
+
+    }
+
+    public void loadGSYVideoPlayer() {
+        String url = "https://github.com/kouyt5/cc/blob/master/keaton.mp4?raw=true";
+
+
+        View view = LayoutInflater.from(this).inflate(R.layout.item_video, findViewById(R.id.activity_main2), true);
+        videoPlayer = view.findViewById(R.id.gsyv_video_player);
+        videoPlayer.setVideoAllCallBack(new MyVideoAllCallBack(){
+            @Override
+            public void onQuitFullscreen(String url, Object... objects) {
+                super.onQuitFullscreen(url, objects);
+                if (orientationUtils != null) {
+                    orientationUtils.backToProtVideo();
+                }
+            }
+        });
+        ImageView imageView = new ImageView(this);
+        loadCover(imageView, url);
+        GSYVideoOptionBuilder builder = new GSYVideoOptionBuilder()
+                .setThumbImageView(imageView)
+                .setUrl(url)
+                .setCacheWithPlay(true)
+                .setVideoTitle(" ")
+                .setIsTouchWiget(true)
+                .setRotateViewAuto(false)
+                .setLockLand(false)
+                .setShowFullAnimation(false)//打开动画
+                .setNeedLockFull(true)
+                .setSeekRatio(1);
+        initVideo();
+        builder.build(videoPlayer);
+
+    }
+
+    public void initVideo() {
+        //外部辅助的旋转，帮助全屏
+        orientationUtils = new OrientationUtils(this, videoPlayer);
+        //初始化不打开外部的旋转
+        orientationUtils.setEnable(false);
+        if (videoPlayer.getFullscreenButton() != null) {
+            videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (orientationUtils.getIsLand() != 1) {
+                        //直接横屏
+                        orientationUtils.resolveByClick();
+                    }
+                    //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                    videoPlayer.startWindowFullscreen(Main2Activity.this, true, true);
+
+                }
+            });
+        }
+    }
+
+    private void loadCover(ImageView imageView, String url) {
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setImageResource(R.mipmap.ic_launcher);
+        Glide.with(this.getApplicationContext())
+                .setDefaultRequestOptions(
+                        new RequestOptions()
+                                .frame(3000000)
+                                .centerCrop()
+                                .error(R.mipmap.ic_launcher)
+                                .placeholder(R.mipmap.ic_launcher))
+                .load(url)
+                .into(imageView);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //如果旋转了就全屏
+        videoPlayer.onConfigurationChanged(this, newConfig, orientationUtils, true, true);
     }
 
 
@@ -189,12 +271,14 @@ public class Main2Activity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         videoPlayer.onVideoPause();
+        Logger.d("onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         videoPlayer.onVideoResume();
+        Logger.d("OnResume");
     }
 
     @Override
