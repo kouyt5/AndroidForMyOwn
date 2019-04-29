@@ -1,15 +1,21 @@
 package com.example.permission;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 //import cn.jzvd.Jzvd;
 //import cn.jzvd.JzvdStd;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,17 +41,22 @@ import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
     StandardGSYVideoPlayer videoPlayer;
     OrientationUtils orientationUtils;
+    private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, permissions, 200);
+        }
         //防止弹出dialog后状态栏异常
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         loadGSYVideoPlayer();
@@ -193,11 +204,14 @@ public class Main2Activity extends AppCompatActivity {
 
     public void loadGSYVideoPlayer() {
         String url = "https://github.com/kouyt5/cc/blob/master/keaton.mp4?raw=true";
-
-
+        String localUrl = Environment.getExternalStorageDirectory().getPath() + "/Download/1234.avi";
+//        if (verfryFileIsExit(localUrl)) {
+//            url = localUrl;
+//            Logger.d("exit");
+//        }
         View view = LayoutInflater.from(this).inflate(R.layout.item_video, findViewById(R.id.activity_main2), true);
         videoPlayer = view.findViewById(R.id.gsyv_video_player);
-        videoPlayer.setVideoAllCallBack(new MyVideoAllCallBack(){
+        videoPlayer.setVideoAllCallBack(new MyVideoAllCallBack() {
             @Override
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
@@ -251,7 +265,7 @@ public class Main2Activity extends AppCompatActivity {
         Glide.with(this.getApplicationContext())
                 .setDefaultRequestOptions(
                         new RequestOptions()
-                                .frame(3000000)
+                                .frame(1)
                                 .centerCrop()
                                 .error(R.mipmap.ic_launcher)
                                 .placeholder(R.mipmap.ic_launcher))
@@ -300,5 +314,19 @@ public class Main2Activity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    private boolean verfryFileIsExit(String s) {
+
+        File file = new File(s);
+        String c = getExternalFilesDir(null).getAbsolutePath();
+        File files = new File(c + "/chen");
+        if (!files.exists())
+            files.mkdir();
+        String u = getExternalCacheDir().getAbsolutePath();
+        String i = getFilesDir().getAbsolutePath();
+        Logger.d(c + "/n" + u + "/n" + i);
+        return file.exists();
+
     }
 }
