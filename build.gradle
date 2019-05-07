@@ -30,4 +30,5 @@ task clean(type: Delete) {
 ext {
     VERSION_CODE = 1
     VERSION_NAME = "chencong"
+    appcompatVersion="1.1.0-alpha04"
 }
