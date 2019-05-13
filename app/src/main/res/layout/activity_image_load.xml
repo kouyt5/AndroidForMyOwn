@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@android:color/transparent">
+    android:background="@android:color/black">
 
     <com.example.permission.pinchimageview.PinchImageView
         android:visibility="gone"
@@ -12,12 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <TextView
+        android:id="@+id/view_page_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:text="1/1"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
     <ProgressBar
         android:id="@+id/progress_bra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginVertical="50dp" />
+        android:layout_centerInParent="true" />
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_page"
         android:layout_width="match_parent"

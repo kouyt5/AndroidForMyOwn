@@ -114,12 +114,7 @@ public class Main2Activity extends AppCompatActivity {
         multiPictureView.addItem(uri);
         multiPictureView.addItem(uri);
 
-        multiPictureView.setItemClickCallback(new MultiPictureView.ItemClickCallback() {
-            @Override
-            public void onItemClicked(@NotNull View view, int i, @NotNull ArrayList<Uri> arrayList) {
-                showMyDialog(arrayList, i);
-            }
-        });
+        multiPictureView.setItemClickCallback((view, i, arrayList) -> showMyDialog(arrayList, i));
     }
 
     public void showMyDialog(ArrayList<Uri> list, int position) {
@@ -158,19 +153,16 @@ public class Main2Activity extends AppCompatActivity {
         orientationUtils = new OrientationUtils(this, videoPlayer);
         orientationUtils.setEnable(false);
         //设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
-        videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.d("you click full screen");
-                if (orientationUtils.getIsLand() != 1) {
-                    videoPlayer.getBackButton().setVisibility(View.VISIBLE);
-                    orientationUtils.resolveByClick();
-                    Logger.d("全屏");
-                }
-                videoPlayer.startWindowFullscreen(Main2Activity.this, true, true);
-                if (videoPlayer.getBackButton().isShown()) {
-                    Logger.d("back is exist");
-                }
+        videoPlayer.getFullscreenButton().setOnClickListener(v -> {
+            Logger.d("you click full screen");
+            if (orientationUtils.getIsLand() != 1) {
+                videoPlayer.getBackButton().setVisibility(View.VISIBLE);
+                orientationUtils.resolveByClick();
+                Logger.d("全屏");
+            }
+            videoPlayer.startWindowFullscreen(Main2Activity.this, true, true);
+            if (videoPlayer.getBackButton().isShown()) {
+                Logger.d("back is exist");
             }
         });
         //是否可以滑动调整
@@ -205,10 +197,10 @@ public class Main2Activity extends AppCompatActivity {
     public void loadGSYVideoPlayer() {
         String url = "https://github.com/kouyt5/cc/blob/master/keaton.mp4?raw=true";
         String localUrl = Environment.getExternalStorageDirectory().getPath() + "/Download/1234.avi";
-//        if (verfryFileIsExit(localUrl)) {
-//            url = localUrl;
-//            Logger.d("exit");
-//        }
+        if (verfryFileIsExit(localUrl)) {
+            url = localUrl;
+            Logger.d("exit");
+        }
         View view = LayoutInflater.from(this).inflate(R.layout.item_video, findViewById(R.id.activity_main2), true);
         videoPlayer = view.findViewById(R.id.gsyv_video_player);
         videoPlayer.setVideoAllCallBack(new MyVideoAllCallBack() {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.permission.R;
 import com.example.permission.adapter.MyViewPageAdapter;
@@ -30,6 +31,7 @@ public class MyDialog extends Dialog {
     private View view;
     private ArrayList<Uri> list;
     private int position;
+    private TextView textViewNumber;
 
     public MyDialog(Context context, int plane_Dialog, ArrayList<Uri> mlist, int position) {
         super(context,plane_Dialog);
@@ -47,18 +49,36 @@ public class MyDialog extends Dialog {
         super.onCreate(savedInstanceState);
         View view = LayoutInflater.from(context).inflate(R.layout.activity_image_load, null);
         this.view = view;
-
         getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         setContentView(view);
         final String uri="https://upload-images.jianshu.io/upload_images/1428688-96ade0e9ca88a8de.png?imageMogr2/auto-orient/";
         progressBar=view.findViewById(R.id.progress_bra);
         MyViewPageAdapter adapter=new MyViewPageAdapter(context,list,view);
+        adapter.setOnPhotoClickListener(this::dismiss);
         ViewPager viewPager=view.findViewById(R.id.view_page);
         viewPager.setOffscreenPageLimit(list.size());
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(position);
+        textViewNumber=view.findViewById(R.id.view_page_number);
+        textViewNumber.setText(position+1+"/"+list.size());
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                textViewNumber.setText(1+position+"/"+list.size());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
 
 //        PinchImageView imageView=view.findViewById(R.id.image_full);
 //        loadImage(uri.toString(),imageView);
@@ -70,6 +90,16 @@ public class MyDialog extends Dialog {
 //        });
 
 
+    }
+
+    //防止全屏异常
+    @Override
+    protected void onStart() {
+        super.onStart();
+        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        this.getWindow().getDecorView().setSystemUiVisibility(uiOptions);
     }
 
     public void loadImage(String url, ImageView imageView){

@@ -2,19 +2,19 @@ package com.example.permission.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
-import android.content.UriMatcher;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.permission.R;
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,7 +23,6 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyViewPageAdapter extends PagerAdapter {
     private ArrayList<Uri> mlist;
@@ -56,6 +55,7 @@ public class MyViewPageAdapter extends PagerAdapter {
         LinearLayout view= (LinearLayout)LayoutInflater.from(mcontext).inflate(R.layout.photoview,null);
         PhotoView photoView=view.findViewById(R.id.photo_view);
         ProgressBar progressBar=rootView.findViewById(R.id.progress_bra);
+        photoView.setOnPhotoTapListener((view1, x, y) -> onPhotoClickListener.onClick());
         DisplayImageOptions options=new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.ic_launcher_background)
                 .build();
@@ -89,5 +89,15 @@ public class MyViewPageAdapter extends PagerAdapter {
         });
         container.addView(view);
         return view;
+    }
+
+    public interface OnPhotoClickListener {
+        void onClick();
+    }
+
+    private OnPhotoClickListener onPhotoClickListener;
+
+    public void setOnPhotoClickListener(OnPhotoClickListener onPhotoClickListener){
+        this.onPhotoClickListener=onPhotoClickListener;
     }
 }
