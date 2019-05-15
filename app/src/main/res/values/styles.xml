@@ -33,8 +33,8 @@
     <item name="android:backgroundDimEnabled">true</item>
     <!--<item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>-->
     </style>
-    <!-- ActionSheet进出动画 -->
-    <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
+    <!-- ActionSheet进出动画  parent="@android:style/Animation.Dialog"-->
+    <style name="popwindows_style">
     <item name="android:windowEnterAnimation">@anim/my_self_dialog_in</item>
     <item name="android:windowExitAnimation">@anim/my_self_dialog_out</item>
     </style>

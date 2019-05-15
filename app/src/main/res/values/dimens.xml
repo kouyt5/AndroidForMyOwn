@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 应用框架相关  -->
+    <dimen name="actionbar_height">48dp</dimen>
+    <dimen name="actionbar_left_image_width">36dp</dimen>
+    <dimen name="actionbar_title_size">18sp</dimen>
+    <dimen name="actionbar_text_size">16sp</dimen>
+    <dimen name="cut_off_line_height">0.5dp</dimen><!-- 分割线高度  -->
+
+</resources>

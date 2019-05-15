@@ -13,17 +13,23 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.example.permission.powindows.MyPop;
 import com.orhanobut.logger.Logger;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,12 +54,41 @@ public class MainActivity extends AppCompatActivity {
                 showDialogTipUserRequestPermission();
             }
         }
+//背景变暗
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 1f;
+        getWindow().setAttributes(lp);
+        MyPop myPop = new MyPop(this);
+        myPop.setOnItemClickListener(new MyPop.OnItemClickListener() {
+            @Override
+            public void setOnItemClick(View v) {
+                switch (v.getId()) {
+                    case R.id.popwindows_button_cancel:
+                        myPop.dismiss();
+                    case R.id.popwindows_button_out:
+                        Toast.makeText(MainActivity.this, "pop", Toast.LENGTH_LONG).show();
+                        myPop.dismiss();
+                    default:
+                        myPop.dismiss();
+                }
+            }
+        });
+        myPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
 
-        button1 = (Button) findViewById(R.id.button_test);
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 1f;
+                getWindow().setAttributes(lp);
+            }
+        });
+        button1 = findViewById(R.id.button_test);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                lp.alpha=0.7f;
+                getWindow().setAttributes(lp);
+                myPop.showAtLocation(MainActivity.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
 
@@ -66,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button3=findViewById(R.id.button3);
+        button3 = findViewById(R.id.button3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

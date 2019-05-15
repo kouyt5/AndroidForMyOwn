@@ -10,6 +10,15 @@ android {
         versionName rootProject.ext.VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    flavorDimensions "version"
+    productFlavors{
+        demo{
+            versionName "1.1_demo"
+        }
+        full{
+            versionName "1.1_full"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -46,7 +55,7 @@ dependencies {
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha04'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha05'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
 
@@ -64,7 +73,9 @@ dependencies {
     implementation 'com.shuyu:gsyVideoPlayer-ex_so:7.0.1'
 //图片加载
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-
+    //视图绑定
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
