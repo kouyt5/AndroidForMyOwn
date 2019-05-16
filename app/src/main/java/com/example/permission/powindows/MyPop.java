@@ -2,6 +2,7 @@ package com.example.permission.powindows;
 
 import android.app.ActionBar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ public class MyPop extends PopupWindow implements View.OnClickListener {
     public MyPop(Context context) {
         super(context);
         popView = LayoutInflater.from(context).inflate(R.layout.popwindows, null);
-        ButterKnife.bind(popView);
+        ButterKnife.bind(popView,(Activity)context);
         setPopupWindow();
         cancel=popView.findViewById(R.id.popwindows_button_cancel);
         out=popView.findViewById(R.id.popwindows_button_out);
