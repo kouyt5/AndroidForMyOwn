@@ -340,6 +340,7 @@ public class Main2Activity extends AppCompatActivity {
     public void showDialogSex(){
         String[] sexs=new String[]{"男","女"};
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("请选择性别");
         builder.setSingleChoiceItems(sexs, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

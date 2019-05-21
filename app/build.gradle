@@ -75,9 +75,14 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //视图绑定
     implementation 'com.jakewharton:butterknife:10.1.0'
+
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
+
+    androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
+    androidTestImplementation 'androidx.test:rules:1.2.0-beta01'
+
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }
