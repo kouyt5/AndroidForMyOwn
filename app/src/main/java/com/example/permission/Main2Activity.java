@@ -48,6 +48,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @version 1.0
+ */
+
 public class Main2Activity extends AppCompatActivity {
     StandardGSYVideoPlayer videoPlayer;
     OrientationUtils orientationUtils;
@@ -277,7 +281,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
         videoPlayer.onConfigurationChanged(this, newConfig, orientationUtils, true, true);
