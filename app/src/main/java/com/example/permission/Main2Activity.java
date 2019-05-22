@@ -13,6 +13,7 @@ import android.net.Uri;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 //import cn.jzvd.Jzvd;
@@ -27,7 +28,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Toast;
-import android.widget.Toolbar;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -65,23 +65,26 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
-        Toolbar toolbar=findViewById(R.id.toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, permissions, 200);
         }
         //防止弹出dialog后状态栏异常
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         loadGSYVideoPlayer();
-        String versionName=null;
+        String versionName = null;
         try {
-            versionName=getPackageManager().getPackageInfo("com.example.permission",PackageManager.GET_ACTIVITIES).versionName;
-        }catch (Exception e){
+            versionName = getPackageManager().getPackageInfo("com.example.permission", PackageManager.GET_ACTIVITIES).versionName;
+        } catch (Exception e) {
 
         }
-        Toast.makeText(this,versionName,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, versionName, Toast.LENGTH_LONG).show();
         //loadGSVUVideo9Player();
         loadMultiPictureView();
         showDialogSex();
@@ -345,15 +348,15 @@ public class Main2Activity extends AppCompatActivity {
 
     }
 
-    public void showDialogSex(){
-        String[] sexs=new String[]{"男","女"};
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+    public void showDialogSex() {
+        String[] sexs = new String[]{"男", "女"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("请选择性别");
         builder.setSingleChoiceItems(sexs, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Toast.makeText(Main2Activity.this,sexs[which],Toast.LENGTH_LONG).show();
+                Toast.makeText(Main2Activity.this, sexs[which], Toast.LENGTH_LONG).show();
             }
         });
         builder.show();
@@ -361,6 +364,8 @@ public class Main2Activity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        super.onSupportNavigateUp();
+        onBackPressed();
         return true;
     }
 }

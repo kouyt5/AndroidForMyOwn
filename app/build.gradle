@@ -75,6 +75,9 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //视图绑定
     implementation 'com.jakewharton:butterknife:10.1.0'
+    //材料
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
     testImplementation 'junit:junit:4.12'
