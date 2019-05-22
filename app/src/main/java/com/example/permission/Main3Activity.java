@@ -1,6 +1,9 @@
 package com.example.permission;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 
@@ -16,6 +19,10 @@ public class Main3Activity extends AppCompatActivity {
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sp=getPreferences(MODE_PRIVATE);
+                Editor editor=sp.edit();
+                editor.putString("chen","cong");
+                editor.apply();
             }
         });
     }

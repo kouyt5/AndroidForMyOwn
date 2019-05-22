@@ -7,6 +7,11 @@
     android:orientation="vertical"
     android:id="@+id/activity_main2"
     tools:context=".Main2Activity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="@drawable/shape_retagle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <com.goyourfly.multi_picture.MultiPictureView
         android:id="@+id/mult_picture"

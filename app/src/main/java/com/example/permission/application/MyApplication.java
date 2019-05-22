@@ -8,6 +8,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
+import butterknife.ButterKnife;
+
 public class MyApplication extends Application {
     @Override
     public void onCreate() {

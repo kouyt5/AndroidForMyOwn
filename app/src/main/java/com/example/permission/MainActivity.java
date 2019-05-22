@@ -32,12 +32,18 @@ import android.widget.Toast;
 import com.example.permission.powindows.MyPop;
 import com.orhanobut.logger.Logger;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
     private static Boolean IS_BACK = false;
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private AlertDialog dialog;
     private Button button1, button2, button3;
+
+    @BindView(R.id.button_main3)
+    Button button_main3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Logger.d("onCreate!!!");
         Logger.d("task ID =:" + getTaskId());
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         if (Build.VERSION.SDK_INT >= 23) {
             int i = ContextCompat.checkSelfPermission(this, permissions[0]);
             if (i != PackageManager.PERMISSION_GRANTED) {
@@ -111,7 +118,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences spre = PreferenceManager.getDefaultSharedPreferences(this);
+        button_main3.setOnClickListener((v -> {
+            Intent intent=new Intent(MainActivity.this,Main3Activity.class);
+            if(intent.resolveActivity(getPackageManager())!=null){
+                startActivity(intent);
+            }
+        }));
     }
 
     @SuppressLint("HandlerLeak")
