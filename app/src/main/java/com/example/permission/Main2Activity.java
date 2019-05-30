@@ -1,15 +1,19 @@
 package com.example.permission;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,22 +29,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.permission.listener.VideoListener;
 import com.example.permission.mydialog.MyDialog;
 import com.example.permission.mylistener.MyVideoAllCallBack;
 import com.goyourfly.multi_picture.ImageLoader;
 import com.goyourfly.multi_picture.MultiPictureView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.orhanobut.logger.Logger;
 import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
@@ -49,22 +60,51 @@ import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+
+import static com.bumptech.glide.load.resource.bitmap.VideoDecoder.FRAME_OPTION;
 
 /**
  * @version 1.0
  */
 
 public class Main2Activity extends AppCompatActivity {
+    private static int count=0;
     StandardGSYVideoPlayer videoPlayer;
     OrientationUtils orientationUtils;
     private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
 
+    @OnClick(R.id.button_next)
+    void clickButton(){
+        List<String> list=new ArrayList<>();
+        String url = "http://jzvd.nathen.cn/6ea7357bc3fa4658b29b7933ba575008/" +
+                "fbbba953374248eb913cb1408dc61d85-5287d2089db37e62345123a1be272f8b.mp4";
+        String url2="https://github.com/kouyt5/cc/blob/master/test.mp4?raw=true";
+        list.add(url2);
+        videoPlayer.onVideoReset();
+        videoPlayer.clearCurrentCache();
+        videoPlayer.setUp(list.get(count%(list.size()==0?1:list.size())),true,"");
+        count++;
+        videoPlayer.restartTimerTask();
+        ImageView imageView=new ImageView(this);
+        loadCover(imageView,url2);
+        videoPlayer.setThumbImageView(imageView);
+        IjkMediaPlayer player = new IjkMediaPlayer();
+        Long speed=player.getTcpSpeed();
+        videoPlayer.getNetSpeed();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -221,8 +261,9 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void loadGSYVideoPlayer() {
-        String url = "https://github.com/kouyt5/cc/blob/master/keaton.mp4?raw=true";
-        String localUrl = Environment.getExternalStorageDirectory().getPath() + "/Download/1234.avi";
+        String url = "http://jzvd.nathen.cn/6ea7357bc3fa4658b29b7933ba575008/" +
+                "fbbba953374248eb913cb1408dc61d85-5287d2089db37e62345123a1be272f8b.mp4";
+        String localUrl = Environment.getExternalStorageDirectory().getPath() + "/Download/test.mp4";
         if (verfryFileIsExit(localUrl)) {
             url = localUrl;
             Logger.d("exit");
@@ -237,6 +278,7 @@ public class Main2Activity extends AppCompatActivity {
                     orientationUtils.backToProtVideo();
                 }
             }
+
         });
         ImageView imageView = new ImageView(this);
         loadCover(imageView, url);
@@ -289,6 +331,27 @@ public class Main2Activity extends AppCompatActivity {
                                 .placeholder(R.mipmap.ic_launcher))
                 .load(url)
                 .into(imageView);
+
+    }
+    @SuppressLint("CheckResult")
+    private void loadCover2(ImageView imageView, String url){
+        RequestOptions requestOptions = RequestOptions.frameOf(1000);
+        requestOptions.set(FRAME_OPTION, MediaMetadataRetriever.OPTION_CLOSEST);
+        requestOptions.transform(new BitmapTransformation() {
+            @Override
+            protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+                return toTransform;
+            }
+            @Override
+            public void updateDiskCacheKey(MessageDigest messageDigest) {
+                try {
+                    messageDigest.update((getPackageName() + "RotateTransform").getBytes("utf-8"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Glide.with(this).load(url).apply(requestOptions).into(imageView);
     }
 
     @Override
@@ -360,6 +423,7 @@ public class Main2Activity extends AppCompatActivity {
             }
         });
         builder.show();
+
     }
 
     @Override
@@ -368,4 +432,5 @@ public class Main2Activity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
 }

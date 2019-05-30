@@ -8,4 +8,12 @@
     <dimen name="actionbar_text_size">16sp</dimen>
     <dimen name="cut_off_line_height">0.5dp</dimen><!-- 分割线高度  -->
 
+    <dimen name="normal_margin">10dp</dimen>
+    <dimen name="large_margin">20dp</dimen>
+
+    <dimen name="text_large_size">18sp</dimen>
+    
+    <dimen name="cardview_elevation">4dp</dimen>
+    <dimen name="cardview_margin">8dp</dimen>
+
 </resources>
